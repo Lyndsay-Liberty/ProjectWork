@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const da = require("./data-access");
+const mw = require("./middleware");
 const bodyParser = require('body-parser');
 const app = express();
 const port = 4000;
@@ -14,7 +15,7 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.get("/customers", da.requireApiKey, async (req, res) => {
+app.get("/customers", mw.requireApiKey, async (req, res) => {
      const cust = await da.getCustomers();
      console.log(cust);
      if(cust){
