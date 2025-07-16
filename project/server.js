@@ -11,7 +11,14 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
+
 app.get("/customers", async (req, res) => {
-    const cust = await da.getCustomers();
-    res.send(cust);    
+     const cust = await da.getCustomers();
+     console.log(cust);
+     if(cust){
+         res.send(cust);
+     }else{
+         res.status(500);
+         res.send(err);
+     }   
 });

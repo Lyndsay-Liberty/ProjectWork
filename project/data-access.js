@@ -1,23 +1,28 @@
-const { MongoClient } = require('mongodb');
-
-const url = 'mongodb://localhost:27017';
+const MongoClient = require('mongodb').MongoClient;
 const dbName = 'custdb';
-
-const client = new MongoClient(url);
-
+const baseUrl = "mongodb://127.0.0.1:27017";
+const collectionName = "customers"
+const connectString = baseUrl + "/" + dbName; 
 let collection;
 
-async function connect() {
-  if (!collection) {
+async function dbStartup() {
+    const client = new MongoClient(connectString);
     await client.connect();
-    const db = client.db(dbName);
-    collection = db.collection('customers');
-  }
+    collection = client.db(dbName).collection(collectionName);
 }
 
 async function getCustomers() {
-  await connect();
-  return collection.find().toArray();
+     try {
+         const customers = await collection.find().toArray();
+         //throw {"message":"an error occured"};
+         return customers;
+     } catch (err) {
+         console.log(err.message);
+         return [null, err.message];
+     }
 }
 
+dbStartup();
 module.exports = { getCustomers };
+
+
