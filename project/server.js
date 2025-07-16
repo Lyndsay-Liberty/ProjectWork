@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const da = require("./data-access");
@@ -13,7 +14,7 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.get("/customers", async (req, res) => {
+app.get("/customers", da.requireApiKey, async (req, res) => {
      const cust = await da.getCustomers();
      console.log(cust);
      if(cust){
