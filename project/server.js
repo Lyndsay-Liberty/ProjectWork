@@ -4,6 +4,7 @@ const path = require('path');
 const da = require("./data-access");
 const mw = require("./middleware");
 const bodyParser = require('body-parser');
+const { requireApiKey, apikeyRoute } = require('./middleware');
 const app = express();
 const port = 4000;
 
@@ -95,4 +96,10 @@ app.delete("/customers/:id", async (req, res) => {
         res.status(404);
         res.send(errMessage);
     }
+});
+app.get('/apikey', apikeyRoute);
+
+// Protect endpoints as needed:
+app.get('/protected', requireApiKey, (req, res) => {
+  res.send('You accessed a protected endpoint!');
 });
