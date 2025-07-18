@@ -55,6 +55,10 @@ async function resetCustomers() {
 }
 async function addCustomer(newCustomer) {
   try {
+    const existing = await collection.findOne({ email: newCustomer.email });
+    if (existing) {
+      return ["fail", null, "Customer with this email already exists"];
+    }
     const insertResult = await collection.insertOne(newCustomer);
     // return array [status, id, errMessage]
     return ["success", insertResult.insertedId, null];
@@ -63,6 +67,7 @@ async function addCustomer(newCustomer) {
     return ["fail", null, err.message];
   }
 }
+
 async function getCustomerById(id) {
   try {
     const customer = await collection.findOne({ id: +id });
